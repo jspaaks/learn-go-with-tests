@@ -2,12 +2,12 @@ package iteration
 
 import "strings"
 
-const nRepeat int = 5
-
-func Repeat(s string) string {	
-	var repeated strings.Builder
-	for i := 0; i < nRepeat; i++ {
-		repeated.WriteString(s)
+// Returns its input argument s, repeated n times.
+func Repeat(s string, n int) (repeated string) {
+	var builder strings.Builder
+	for i := 0; i < n; i++ {
+		builder.WriteString(s)
 	}
-	return repeated.String()
+	repeated = builder.String()
+	return
 }
