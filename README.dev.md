@@ -5,7 +5,7 @@
 - Go
 - `pkgsite` (for offline viewing of documentation)
 
-# Viewing documentation
+## Viewing documentation
 
 ```console
 # start the documentation server
