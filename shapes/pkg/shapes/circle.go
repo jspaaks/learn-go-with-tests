@@ -13,7 +13,6 @@ func (c Circle) CalcArea() (area float64) {
 	return
 }
 
-
 // Returns the perimeter of circle c.
 func (c Circle) CalcPerimeter() (perimeter float64) {
 	perimeter = 2 * math.Pi * c.Radius
