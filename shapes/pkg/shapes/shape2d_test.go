@@ -2,48 +2,68 @@ package shapes
 
 import "testing"
 
-func TestCalcPerimeter(t *testing.T) {
-
-	checkPerimeter := func(t *testing.T, shape2d Shape2D, want float64){
-		t.Helper()
-		var got float64 = shape2d.CalcPerimeter()
-		if got != want {
-			t.Errorf("Got %g, want %g", got, want)
-		}
+func TestCalcArea(t *testing.T) {
+	records := []struct {
+		desc      string
+		shape     Shape2D
+		perimeter float64
+	}{
+		{
+			desc: "circle",
+			shape: Circle{Radius: 10.0},
+			perimeter: 314.1592653589793,
+		},
+		{
+			desc: "rectangle",
+			shape: Rectangle{Height: 10.0, Width: 20.0},
+			perimeter: 200.0,
+		},
+		{
+			desc: "right triangle",
+			shape: RightTriangle{Height: 21.0, Base: 20.0},
+			perimeter: 210.0,
+		},
 	}
 
-	t.Run("circle", func(t *testing.T){
-		var circle = Circle{Radius: 10.0}
-		var want float64 = 62.83185307179586
-		checkPerimeter(t, circle, want)
-	})
-	t.Run("rectangle", func(t *testing.T){
-		var rectangle = Rectangle{Height: 10.0, Width: 20.0}
-		var want float64 = 60.0
-		checkPerimeter(t, rectangle, want)
-	})
+	for _, record := range records {
+		t.Run(record.desc, func(t *testing.T){
+			got := record.shape.CalcArea()
+			if got != record.perimeter {
+				t.Errorf("%#v got %g, want %g", record.shape, got, record.perimeter)
+			}
+		})
+	}
 }
 
-func TestCalcArea(t *testing.T) {
-
-	checkArea := func(t *testing.T, shape2d Shape2D, want float64){
-		t.Helper()
-		var got float64 = shape2d.CalcArea()
-		if got != want {
-			t.Errorf("Got %g, want %g", got, want)
-		}
+func TestCalcPerimeter(t *testing.T) {
+	records := []struct {
+		desc  string
+		shape Shape2D
+		area  float64
+	}{
+		{
+			desc: "circle",
+			shape: Circle{Radius: 10.0},
+			area: 62.83185307179586,
+		},
+		{
+			desc: "rectangle",
+			shape: Rectangle{Height: 10.0, Width: 20.0},
+			area: 60.0,
+		},
+		{
+			desc: "right triangle",
+			shape: RightTriangle{Height: 21.0, Base: 20.0},
+			area: 70.0,
+		},
 	}
 
-	t.Run("circle", func (t *testing.T){
-		var circle = Circle{Radius: 10.0}
-		const want float64 = 314.1592653589793
-		checkArea(t, circle, want)
-	})
-
-	t.Run("rectangle", func (t *testing.T){
-		var rectangle = Rectangle{Width: 10.0, Height: 20.0}
-		var want float64 = 200.0
-		checkArea(t, rectangle, want)
-	})
-
+	for _, record := range records {
+		t.Run(record.desc, func(t *testing.T){
+			got := record.shape.CalcPerimeter()
+			if got != record.area {
+				t.Errorf("%#v got %g, want %g", record.shape, got, record.area)
+			}
+		})
+	}
 }

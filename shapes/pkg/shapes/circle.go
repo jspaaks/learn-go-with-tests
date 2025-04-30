@@ -7,13 +7,13 @@ type Circle struct {
 	Radius float64
 }
 
-// Returns the area of circle c.
+// Returns the area of Circle receiver c.
 func (c Circle) CalcArea() (area float64) {
 	area = math.Pi * c.Radius * c.Radius
 	return
 }
 
-// Returns the perimeter of circle c.
+// Returns the perimeter of a Circle receiver c.
 func (c Circle) CalcPerimeter() (perimeter float64) {
 	perimeter = 2 * math.Pi * c.Radius
 	return
