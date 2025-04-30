@@ -2,7 +2,7 @@ package shapes
 
 // Definition of a rectangle.
 type Rectangle struct {
-	Width float64
+	Width  float64
 	Height float64
 }
 

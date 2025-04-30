@@ -4,7 +4,7 @@ import "math"
 
 // Definition of a right triangle.
 type RightTriangle struct {
-	Base float64
+	Base   float64
 	Height float64
 }
 
@@ -15,7 +15,7 @@ func (r RightTriangle) CalcArea() float64 {
 
 // Returns the lenght of the hypothenuse of the RightTriangle receiver r.
 func (r RightTriangle) CalcHypothenuse() float64 {
-	return math.Sqrt(r.Base * r.Base + r.Height * r.Height)
+	return math.Sqrt(r.Base*r.Base + r.Height*r.Height)
 }
 
 // Returns the perimeter of the RightTriangle receiver r.
