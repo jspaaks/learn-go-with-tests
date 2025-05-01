@@ -16,6 +16,13 @@ var assertKeyDoesntExistDeleteError = func(t *testing.T, err error) {
 	}
 }
 
+var assertKeyDoesntExistLookupError = func(t *testing.T, err error) {
+	t.Helper()
+	if err != KeyDoesntExistLookupError {
+		t.Fatal("Expected a KeyDoesntExistLookupError but didn't get one")
+	}
+}
+
 var assertKeyDoesntExistUpdateError = func(t *testing.T, err error) {
 	t.Helper()
 	if err != KeyDoesntExistUpdateError {
@@ -23,30 +30,23 @@ var assertKeyDoesntExistUpdateError = func(t *testing.T, err error) {
 	}
 }
 
-var assertKeyError = func(t *testing.T, err error) {
+var assertKeyAlreadyExistsError = func(t *testing.T, err error) {
 	t.Helper()
-	if err != KeyError {
-		t.Fatal("Expected a KeyError but didn't get one")
-	}
-}
-
-var assertKeyExistsError = func(t *testing.T, err error) {
-	t.Helper()
-	if err != KeyExistsError {
-		t.Fatal("Expected a KeyExistsError but didn't get one")
+	if err != KeyAlreadyExistsError {
+		t.Fatal("Expected a KeyAlreadyExistsError but didn't get one")
 	}
 }
 
 var assertNoErrors = func(t *testing.T, err error) {
 	t.Helper()
-	if err == KeyError {
-		t.Fatal("Didn't expect a KeyError but got one")
-	}
-	if err == KeyExistsError {
-		t.Fatal("Didn't expect a KeyExistsError but got one")
+	if err == KeyAlreadyExistsError {
+		t.Fatal("Didn't expect a KeyAlreadyExistsError but got one")
 	}
 	if err == KeyDoesntExistDeleteError {
 		t.Fatal("Didn't expect a KeyDoesntExistDeleteError but got one")
+	}
+	if err == KeyDoesntExistLookupError {
+		t.Fatal("Didn't expect a KeyDoesntExistLookupError but got one")
 	}
 	if err == KeyDoesntExistUpdateError {
 		t.Fatal("Didn't expect a KeyDoesntExistUpdateError but got one")
@@ -67,7 +67,7 @@ func TestAdd(t *testing.T) {
 	t.Run("attempting to add a kv pair to a dictionary for which the key already exists", func(t *testing.T) {
 		dictionary := Dictionary{"testkey": "testvalue"}
 		err := dictionary.Add("testkey", "newtestvalue")
-		assertKeyExistsError(t, err)
+		assertKeyAlreadyExistsError(t, err)
 		got, err := dictionary.Lookup("testkey")
 		assertCorrectValueForKey(t, "testvalue", got)
 	})
@@ -79,7 +79,7 @@ func TestDelete(t *testing.T) {
 		err := dictionary.Delete("testkey")
 		assertNoErrors(t, err)
 		got, err := dictionary.Lookup("testkey")
-		assertKeyError(t, err)
+		assertKeyDoesntExistLookupError(t, err)
 		assertCorrectValueForKey(t, "", got)
 	})
 	t.Run("attempting to delete the value of a nonexisting key in a dictionary", func(t *testing.T) {
@@ -99,7 +99,7 @@ func TestLookup(t *testing.T) {
 	t.Run("attempting to look up a nonexisting key in a dictionary", func(t *testing.T) {
 		dictionary := Dictionary{}
 		got, err := dictionary.Lookup("testkey")
-		assertKeyError(t, err)
+		assertKeyDoesntExistLookupError(t, err)
 		assertCorrectValueForKey(t, "", got)
 	})
 }
