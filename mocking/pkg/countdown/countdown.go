@@ -3,14 +3,13 @@ package countdown
 import (
 	"fmt"
 	"io"
-	"time"
 )
 
-func Countdown(writer io.Writer) {
+func Countdown(writer io.Writer, sleeper Sleeper) {
 	const startFrom int = 3
 	for i := startFrom; i > 0; i-- {
 		fmt.Fprintf(writer, "%d\n", i)
-		time.Sleep(1 * time.Second)
+		sleeper.Sleep()
 	}
 	fmt.Fprint(writer, "Go!\n")
 }
