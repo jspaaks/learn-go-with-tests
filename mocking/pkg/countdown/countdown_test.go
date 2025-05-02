@@ -10,7 +10,7 @@ type mockedSleeper struct {
 }
 
 func (m *mockedSleeper) Sleep() {
-	m.NumberOfCalls++
+	m.NumberOfCalls += 1
 }
 
 func TestCountdown(t *testing.T) {
