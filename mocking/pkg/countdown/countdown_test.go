@@ -2,41 +2,48 @@ package countdown
 
 import (
 	"bytes"
+	"strings"
 	"testing"
 )
 
-type mockedSleeper struct {
-	NumberOfCalls int
-}
-
-func (m *mockedSleeper) Sleep() {
-	m.NumberOfCalls += 1
-}
-
 func TestCountdown(t *testing.T) {
 
-	assertOutputCorrect := func(t *testing.T, buffer bytes.Buffer) {
+	t.Run("verify the output is correct", func(t *testing.T) {
+
+		buffer := bytes.Buffer{}
+		sleeper := TimedSleeper{Duration: 0}
+		Countdown(&buffer, &sleeper)
+
 		got := buffer.String()
-		want := `3
-2
-1
-Go!
-`
+		want := "3\n2\n1\nGo!\n"
 		if got != want {
 			t.Errorf("Got %q, want %q", got, want)
 		}
-	}
+	})
 
-	assertThreeCallsToSleeper := func(t *testing.T, sleeper mockedSleeper) {
-		const expectedNumberOfCalls = 3
-		if sleeper.NumberOfCalls != expectedNumberOfCalls {
-			t.Errorf("Made %d calls to Sleep(), but expected %d", sleeper.NumberOfCalls, 3)
+	t.Run("verify the write calls have sleeps in between", func(t *testing.T) {
+
+		spy := countdownSpy{}
+		Countdown(&spy, &spy)
+		got := strings.Join(spy.Calls, "\n")
+		want := "write\nsleep\nwrite\nsleep\nwrite\nsleep\nwrite"
+		if got != want {
+			t.Errorf("Got %q, want %q", got, want)
 		}
-	}
+	})
 
-	sleeper := mockedSleeper{NumberOfCalls: 0}
-	buffer := bytes.Buffer{}
-	Countdown(&buffer, &sleeper)
-	assertOutputCorrect(t, buffer)
-	assertThreeCallsToSleeper(t, sleeper)
+}
+
+
+type countdownSpy struct {
+	Calls []string
+}
+
+func (c *countdownSpy) Write(p []byte) (n int, err error) {
+	c.Calls = append(c.Calls, "write")
+	return
+}
+
+func (c *countdownSpy) Sleep() {
+	c.Calls = append(c.Calls, "sleep")
 }
