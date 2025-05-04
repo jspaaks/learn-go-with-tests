@@ -8,6 +8,6 @@ import (
 
 func main() {
 	writer := os.Stdout
-	sleeper := countdown.TimedSleeper{Duration: 1 * time.Second}
+	sleeper := countdown.TimedSleeper{Duration: 1 * time.Second, SleepFun: time.Sleep}
 	countdown.Countdown(writer, &sleeper)
 }
