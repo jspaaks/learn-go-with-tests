@@ -1,20 +1,21 @@
 package racer
 
-import (
-	"net/http"
-	"time"
-)
+import "net/http"
 
 func Racer(url0 string, url1 string) (winner string) {
-	measureResponseDuration := func(url string) time.Duration {
-		start := time.Now()
-		http.Get(url)
-		return time.Since(start)
+	var ping = func(url string) chan struct{} {
+		ch := make(chan struct{})
+		go func (){
+			http.Get(url)
+			close(ch)
+		}()
+		return ch
 	}
-	duration0 := measureResponseDuration(url0)
-	duration1 := measureResponseDuration(url1)
-	if duration0 < duration1 {
+
+	select {
+	case <-ping(url0):
 		return url0
+	case <-ping(url1):
+		return url1
 	}
-	return url1
 }
