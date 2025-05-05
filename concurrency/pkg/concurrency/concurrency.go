@@ -9,21 +9,24 @@ func CheckUrls(check UrlChecker, urls []string) StatusMap {
 		url    string
 		status bool
 	}
-	channel := make(chan result)
+	ch := make(chan result)
 
 	// sending
 	for i := 0; i < len(urls); i++ {
 		go func() {
-			channel <- result{url: urls[i], status: check(urls[i])}
+			ch <- result{url: urls[i], status: check(urls[i])}
 		}()
 	}
 
 	// receiving
 	results := make(StatusMap)
 	for i := 0; i < len(urls); i++ {
-		result := <-channel
+		result := <-ch
 		results[result.url] = result.status
 	}
+
+	// close the channel
+	close(ch)
 
 	return results
 }
