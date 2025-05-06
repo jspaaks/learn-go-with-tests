@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-var getServerAndUrl = func(delay time.Duration) (server *httptest.Server, url string){
+var setUpServerAndGetItsUrl = func(delay time.Duration) (server *httptest.Server, url string) {
 	delayedHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(delay)
 		w.WriteHeader(http.StatusOK)
@@ -17,34 +17,45 @@ var getServerAndUrl = func(delay time.Duration) (server *httptest.Server, url st
 	return
 }
 
+// not sure why but the tests still seem to wait for the slowest-responding server
 
 func TestRacer(t *testing.T) {
+	fastServer, fastUrl := setUpServerAndGetItsUrl(2 * time.Millisecond)
+	slowServer, slowUrl := setUpServerAndGetItsUrl(20 * time.Millisecond)
 
-	fastServer, fastUrl := getServerAndUrl(2 * time.Millisecond)
 	defer fastServer.Close()
-
-	slowServer, slowUrl := getServerAndUrl(20 * time.Millisecond)
 	defer slowServer.Close()
 
-	t.Run("selecting the url whose server responds fastest", func(t *testing.T){
+	t.Run("select the server with the lowest response time", func(t *testing.T) {
 		want := fastUrl
-		got, _ := Racer(fastUrl, slowUrl, 10 * time.Second)
+		got, err := Racer(fastUrl, slowUrl)
+		if err != nil {
+			t.Errorf("Didn't expect an error but got one")
+		}
 		if got != want {
 			t.Errorf("Wanted %q but got %q instead", want, got)
 		}
 	})
+}
 
-	t.Run("timing out after if neither server has responded after 10 seconds", func(t *testing.T){
-		fastServer, fastUrl := getServerAndUrl(11 * time.Second)
-		defer fastServer.Close()
+func TestConfigurableRacer(t *testing.T) {
 
-		slowServer, slowUrl := getServerAndUrl(12 * time.Second)
-		defer slowServer.Close()
+	fastServer, fastUrl := setUpServerAndGetItsUrl(10 * time.Millisecond)
+	slowServer, slowUrl := setUpServerAndGetItsUrl(100 * time.Millisecond)
 
-		_, err := Racer(fastUrl, slowUrl, 10 * time.Second)
+	defer fastServer.Close()
+	defer slowServer.Close()
+
+	t.Run("verify an error is returned when both servers time out", func(t *testing.T) {
+
+		const want = ""
+		got, err := ConfigurableRacer(fastUrl, slowUrl, 5*time.Millisecond)
+
 		if err == nil {
 			t.Errorf("Expected an error but didn't get one")
 		}
+		if got != want {
+			t.Errorf("Wanted %q but got %q instead", want, got)
+		}
 	})
-
 }
