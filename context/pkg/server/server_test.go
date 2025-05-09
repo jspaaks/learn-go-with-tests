@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -18,11 +19,11 @@ func (s *SpyStore) Fetch(ctx context.Context) (string, error) {
 	ch := make(chan string, 1)
 	go func() {
 		var result string
-		// this next for loop serves to emulate a task that is slow, but which can be partitioned
+		// This next for loop serves to emulate a task that is slow, but which can be partitioned
 		// into subtasks. Specifically the for loop builds up the string variable 'result'
-		// character-by-character such that it is slow enough for potential timeouts to kick in, and
-		// such that it can actually check whether it needs to cancel the rest of the work, which it
-		// does after each character
+		// character-by-character and with a delay such that it is slow enough for potential
+		// timeouts to kick in, and such that the granular nature of the task allows for checking
+		// whether the rest of the work needs to be canceled.
 		for _, c := range s.contents {
 			select {
 			case <-ctx.Done():
@@ -74,16 +75,18 @@ func TestServer(t *testing.T) {
 			t.Errorf(`got "%s" but wanted "%s"`, response.Body.String(), expected)
 		}
 	})
-	//t.Run("request gets canceled", func(t *testing.T) {
-	//	expected := "hello, world"
-	//	store := &SpyStore{canceled: false, contents: expected, t: t}
-	//	server := Server(store)
-	//	request := httptest.NewRequest(http.MethodGet, "/", nil)
-	//	cancelingCtx, cancel := context.WithCancel(request.Context())
-	//	cancelableRequest := request.WithContext(cancelingCtx)
-	//	response := httptest.NewRecorder()
-	//	time.AfterFunc(5*time.Millisecond, cancel)
-	//	server.ServeHTTP(response, cancelableRequest)
-	//	store.assertWasCanceled()
-	//})
+	t.Run("telling store to cancel the work if request gets canceled", func(t *testing.T) {
+		expected := "hello, world"
+		store := &SpyStore{contents: expected, t: t}
+		server := Server(store)
+		request := httptest.NewRequest(http.MethodGet, "/", nil)
+		cancelingCtx, cancel := context.WithCancel(request.Context())
+		cancelableRequest := request.WithContext(cancelingCtx)
+		response := &SpyResponseWriter{written: false}
+		time.AfterFunc(5*time.Millisecond, cancel)
+		server.ServeHTTP(response, cancelableRequest)
+		if response.written {
+			t.Errorf("Didn't expect anything to be written")
+		}
+	})
 }
