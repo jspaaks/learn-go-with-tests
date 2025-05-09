@@ -62,10 +62,10 @@ var testcases = []testcase{
 }
 
 func descArabicToRoman(testcase testcase) string {
-	return fmt.Sprintf("%d gets converted to %q", testcase.arabic, testcase.roman)
+	return fmt.Sprintf("%d gets converted to %s", testcase.arabic, testcase.roman)
 }
 func descRomanToArabic(testcase testcase) string {
-	return fmt.Sprintf("%q gets converted to %d", testcase.roman, testcase.arabic)
+	return fmt.Sprintf("%s gets converted to %d", testcase.roman, testcase.arabic)
 }
 
 func TestConvertArabicToRoman(t *testing.T) {
@@ -75,6 +75,18 @@ func TestConvertArabicToRoman(t *testing.T) {
 			actual := ConvertArabicToRoman(testcase.arabic)
 			if actual != testcase.roman {
 				t.Errorf("Got %q instead of expected %q when passing %d", actual, testcase.roman, testcase.arabic)
+			}
+		})
+	}
+}
+
+func TestConvertRomanToArabic(t *testing.T) {
+	for _, testcase := range testcases {
+		desc := descRomanToArabic(testcase)
+		t.Run(desc, func(t *testing.T) {
+			actual := ConvertRomanToArabic(testcase.roman)
+			if actual != testcase.arabic {
+				t.Errorf("Got %d instead of expected %d when passing %q", actual, testcase.arabic, testcase.roman)
 			}
 		})
 	}

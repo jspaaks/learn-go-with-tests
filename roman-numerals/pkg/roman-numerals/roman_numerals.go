@@ -2,7 +2,7 @@ package roman_numerals
 
 import "strings"
 
-var allSymbols = []struct {
+var pairs = []struct {
 	roman  string
 	arabic int
 }{
@@ -22,13 +22,23 @@ var allSymbols = []struct {
 }
 
 func ConvertArabicToRoman(arabic int) (roman string) {
-
 	var result strings.Builder
-	for _, symbol := range allSymbols {
-		for arabic >= symbol.arabic {
-			result.WriteString(symbol.roman)
-			arabic -= symbol.arabic
+	for _, pair := range pairs {
+		for arabic >= pair.arabic {
+			result.WriteString(pair.roman)
+			arabic -= pair.arabic
 		}
 	}
 	return result.String()
+}
+
+
+func ConvertRomanToArabic(roman string) (arabic int) {
+	for _, pair := range pairs {
+		for strings.HasPrefix(roman, pair.roman) {
+			roman = strings.TrimPrefix(roman, pair.roman)
+			arabic += pair.arabic
+		}
+	}
+	return arabic
 }
