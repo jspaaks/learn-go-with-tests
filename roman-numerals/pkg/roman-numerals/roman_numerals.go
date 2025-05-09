@@ -21,7 +21,7 @@ var allSymbols = []struct {
 	{"I", 1},
 }
 
-func ConvertToRoman(arabic int) (roman string) {
+func ConvertArabicToRoman(arabic int) (roman string) {
 
 	var result strings.Builder
 	for _, symbol := range allSymbols {
