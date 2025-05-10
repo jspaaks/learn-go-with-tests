@@ -3,10 +3,11 @@ package roman_numerals
 import (
 	"fmt"
 	"testing"
+	"testing/quick"
 )
 
 type testcase struct {
-	arabic int
+	arabic uint16
 	roman  string
 }
 
@@ -90,4 +91,85 @@ func TestConvertRomanToArabic(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestProperties(t *testing.T) {
+	config := quick.Config{
+		MaxCount: 1000,
+	}
+	t.Run("doesnt have symbol occurring more than 3 times consecutively", func(t *testing.T) {
+		assertion := func(arabic uint16) bool {
+			if arabic == 0 || arabic > 3999 {
+				return true
+			}
+			roman := []rune(ConvertArabicToRoman(arabic))
+			prev := roman[0]
+			nconsecutive := 1
+			for _, this := range roman[1:] {
+				if this == prev {
+					nconsecutive++
+				} else {
+					nconsecutive = 1
+				}
+				if nconsecutive > 3 {
+					return false
+				}
+				prev = this
+			}
+			return true
+		}
+		err := quick.Check(assertion, &config)
+		if err != nil {
+			t.Error("failed consecutively recurring symbol test", err)
+		}
+	})
+	t.Run("subtractors", func(t *testing.T) {
+		assertion := func(arabic uint16) bool {
+			if arabic == 0 || arabic > 3999 {
+				return true
+			}
+			var pairs = map[rune]uint16{
+				'M': 1000,
+				'D': 500,
+				'C': 100,
+				'L': 50,
+				'X': 10,
+				'V': 5,
+				'I': 1,
+			}
+			roman := []rune(ConvertArabicToRoman(arabic))
+			prev := roman[0]
+			for _, this := range roman[1:] {
+				symbolsAreInOrder := pairs[prev] >= pairs[this]
+				previousSymbolsIsSubtractor := prev == 'I' || prev == 'X' || prev == 'C'
+				if symbolsAreInOrder {
+					prev = this
+					continue
+				}
+				if previousSymbolsIsSubtractor {
+					prev = this
+					continue
+				}
+				return false
+			}
+			return true
+		}
+		err := quick.Check(assertion, &config)
+		if err != nil {
+			t.Error("failed subtractors test on input", err)
+		}
+	})
+	t.Run("roundtrip conversion", func(t *testing.T) {
+		assertion := func(arabic uint16) bool {
+			if arabic == 0 || arabic > 3999 {
+				return true
+			}
+			roman := ConvertArabicToRoman(arabic)
+			return ConvertRomanToArabic(roman) == arabic
+		}
+		err := quick.Check(assertion, &config)
+		if err != nil {
+			t.Error("failed roundtrip test", err)
+		}
+	})
 }

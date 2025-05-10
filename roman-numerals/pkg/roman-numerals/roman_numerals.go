@@ -4,7 +4,7 @@ import "strings"
 
 var pairs = []struct {
 	roman  string
-	arabic int
+	arabic uint16
 }{
 	{"M", 1000},
 	{"CM", 900},
@@ -21,7 +21,7 @@ var pairs = []struct {
 	{"I", 1},
 }
 
-func ConvertArabicToRoman(arabic int) (roman string) {
+func ConvertArabicToRoman(arabic uint16) (roman string) {
 	var result strings.Builder
 	for _, pair := range pairs {
 		for arabic >= pair.arabic {
@@ -32,8 +32,7 @@ func ConvertArabicToRoman(arabic int) (roman string) {
 	return result.String()
 }
 
-
-func ConvertRomanToArabic(roman string) (arabic int) {
+func ConvertRomanToArabic(roman string) (arabic uint16) {
 	for _, pair := range pairs {
 		for strings.HasPrefix(roman, pair.roman) {
 			roman = strings.TrimPrefix(roman, pair.roman)
