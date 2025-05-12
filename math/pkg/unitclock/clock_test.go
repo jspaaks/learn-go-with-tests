@@ -1,4 +1,4 @@
-package clock
+package unitclock
 
 import (
 	"fmt"
@@ -16,15 +16,15 @@ func assertBasicallyEqualPoints(t *testing.T, a Point, b Point, tolerance float6
 	}
 }
 
-func TestClockHourHand(t *testing.T) {
+func TestHourHand(t *testing.T) {
 	testcases := []struct {
 		hours    int
 		expected Point
 	}{
-		{0, Point{X: 150, Y: 100}},
-		{3, Point{X: 200, Y: 150}},
-		{6, Point{X: 150, Y: 200}},
-		{9, Point{X: 100, Y: 150}},
+		{0, Point{X: 0, Y: 1}},
+		{3, Point{X: 1, Y: 0}},
+		{6, Point{X: 0, Y: -1}},
+		{9, Point{X: -1, Y: 0}},
 	}
 	for _, testcase := range testcases {
 		desc := fmt.Sprintf("at %d hours", testcase.hours)
@@ -36,15 +36,15 @@ func TestClockHourHand(t *testing.T) {
 	}
 }
 
-func TestClockMinuteHand(t *testing.T) {
+func TestMinuteHand(t *testing.T) {
 	testcases := []struct {
 		minutes  int
 		expected Point
 	}{
-		{0, Point{X: 150, Y: 70}},
-		{15, Point{X: 230, Y: 150}},
-		{30, Point{X: 150, Y: 230}},
-		{45, Point{X: 70, Y: 150}},
+		{0, Point{X: 0, Y: 1}},
+		{15, Point{X: 1, Y: 0}},
+		{30, Point{X: 0, Y: -1}},
+		{45, Point{X: -1, Y: 0}},
 	}
 	for _, testcase := range testcases {
 		desc := fmt.Sprintf("at %d minutes", testcase.minutes)
@@ -56,15 +56,15 @@ func TestClockMinuteHand(t *testing.T) {
 	}
 }
 
-func TestClockSecondHand(t *testing.T) {
+func TestSecondHand(t *testing.T) {
 	testcases := []struct {
 		seconds  int
 		expected Point
 	}{
-		{0, Point{X: 150, Y: 60}},
-		{15, Point{X: 240, Y: 150}},
-		{30, Point{X: 150, Y: 240}},
-		{45, Point{X: 60, Y: 150}},
+		{0, Point{X: 0, Y: 1}},
+		{15, Point{X: 1, Y: 0}},
+		{30, Point{X: 0, Y: -1}},
+		{45, Point{X: -1, Y: 0}},
 	}
 
 	for _, testcase := range testcases {
