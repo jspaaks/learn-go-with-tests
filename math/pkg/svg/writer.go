@@ -33,7 +33,7 @@ type Line struct {
 	Y2 float64 `xml:"y2,attr"`
 }
 
-func SvgWriter(w io.Writer, t time.Time) {
+func Writer(w io.Writer, t time.Time) {
 	const svgStart = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 	<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 	<svg xmlns="http://www.w3.org/2000/svg"

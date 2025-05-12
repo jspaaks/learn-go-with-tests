@@ -18,7 +18,7 @@ func assertLinesIncludeGivenLine(t *testing.T, lines []Line, want Line, s string
 	t.Fatalf("Expected to find the second hand with x2 of %+v and y2 of %+v in the SVG output %v", want.X2, want.Y2, s)
 }
 
-func TestSvgWriterMinuteHand(t *testing.T) {
+func TestWriterMinuteHand(t *testing.T) {
 	testcases := []struct {
 		minutes  int
 		expected Line
@@ -33,7 +33,7 @@ func TestSvgWriterMinuteHand(t *testing.T) {
 		t.Run(desc, func(t *testing.T) {
 			tm := time.Date(1337, time.January, 1, 0, testcase.minutes, 0, 0, time.UTC)
 			b := bytes.Buffer{}
-			SvgWriter(&b, tm)
+			Writer(&b, tm)
 			svg := Svg{}
 			xml.Unmarshal(b.Bytes(), &svg)
 			assertLinesIncludeGivenLine(t, svg.Lines, testcase.expected, b.String())
@@ -41,7 +41,7 @@ func TestSvgWriterMinuteHand(t *testing.T) {
 	}
 }
 
-func TestSvgWriterHourHand(t *testing.T) {
+func TestWriterHourHand(t *testing.T) {
 	testcases := []struct {
 		hours    int
 		expected Line
@@ -56,7 +56,7 @@ func TestSvgWriterHourHand(t *testing.T) {
 		t.Run(desc, func(t *testing.T) {
 			tm := time.Date(1337, time.January, 1, testcase.hours, 0, 0, 0, time.UTC)
 			b := bytes.Buffer{}
-			SvgWriter(&b, tm)
+			Writer(&b, tm)
 			svg := Svg{}
 			xml.Unmarshal(b.Bytes(), &svg)
 			assertLinesIncludeGivenLine(t, svg.Lines, testcase.expected, b.String())
@@ -64,7 +64,7 @@ func TestSvgWriterHourHand(t *testing.T) {
 	}
 }
 
-func TestSvgWriterSecondHand(t *testing.T) {
+func TestWriterSecondHand(t *testing.T) {
 	testcases := []struct {
 		seconds  int
 		expected Line
@@ -79,7 +79,7 @@ func TestSvgWriterSecondHand(t *testing.T) {
 		t.Run(desc, func(t *testing.T) {
 			tm := time.Date(1337, time.January, 1, 0, 0, testcase.seconds, 0, time.UTC)
 			b := bytes.Buffer{}
-			SvgWriter(&b, tm)
+			Writer(&b, tm)
 			svg := Svg{}
 			xml.Unmarshal(b.Bytes(), &svg)
 			assertLinesIncludeGivenLine(t, svg.Lines, testcase.expected, b.String())
