@@ -6,6 +6,16 @@ import (
 	"time"
 )
 
+func assertBasicallyEqualPoints(t *testing.T, a Point, b Point, tolerance float64) {
+	t.Helper()
+	dx := a.X - b.X
+	dy := a.Y - b.Y
+	tooFar := dx*dx+dy*dy > tolerance*tolerance
+	if tooFar {
+		t.Fatalf("%v and %v are separated by more than the tolerance %g", a, b, tolerance)
+	}
+}
+
 func TestClockHourHand(t *testing.T) {
 	testcases := []struct {
 		hours    int

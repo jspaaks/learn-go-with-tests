@@ -1,10 +1,12 @@
-package clock
+package svg
 
 import (
 	"encoding/xml"
 	"fmt"
 	"io"
 	"time"
+
+	"github.com/jspaaks/learn-go-with-tests/math/pkg/clock"
 )
 
 type Svg struct {
@@ -44,26 +46,26 @@ func SvgWriter(w io.Writer, t time.Time) {
 
 	io.WriteString(w, svgStart)
 	io.WriteString(w, bezel)
-	io.WriteString(w, hourHandTag(HourHand(t)))
-	io.WriteString(w, minuteHandTag(MinuteHand(t)))
-	io.WriteString(w, secondHandTag(SecondHand(t)))
+	io.WriteString(w, hourHandTag(clock.HourHand(t)))
+	io.WriteString(w, minuteHandTag(clock.MinuteHand(t)))
+	io.WriteString(w, secondHandTag(clock.SecondHand(t)))
 	io.WriteString(w, svgEnd)
 }
 
-func handTag(p Point, color string, strokeWidth int) string {
+func handTag(p clock.Point, color string, strokeWidth int) string {
 	return fmt.Sprintf(
 		`<line x1="150" y1="150" x2="%.3f" y2="%.3f" style="fill:none;stroke:%s;stroke-width:%dpx;"/>`,
 		p.X, p.Y, color, strokeWidth)
 }
 
-func hourHandTag(p Point) string {
+func hourHandTag(p clock.Point) string {
 	return handTag(p, "#000", 7)
 }
 
-func minuteHandTag(p Point) string {
+func minuteHandTag(p clock.Point) string {
 	return handTag(p, "#000", 5)
 }
 
-func secondHandTag(p Point) string {
+func secondHandTag(p clock.Point) string {
 	return handTag(p, "#F00", 3)
 }

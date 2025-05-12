@@ -1,4 +1,4 @@
-package clock
+package svg
 
 import (
 	"bytes"
@@ -7,6 +7,16 @@ import (
 	"testing"
 	"time"
 )
+
+func assertLinesIncludeGivenLine(t *testing.T, lines []Line, want Line, s string) {
+	t.Helper()
+	for _, got := range lines {
+		if got == want {
+			return
+		}
+	}
+	t.Fatalf("Expected to find the second hand with x2 of %+v and y2 of %+v in the SVG output %v", want.X2, want.Y2, s)
+}
 
 func TestSvgWriterMinuteHand(t *testing.T) {
 	testcases := []struct {
