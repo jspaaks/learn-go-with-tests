@@ -3,6 +3,7 @@ package blogposts_test
 import (
 	"errors"
 	"io/fs"
+	"reflect"
 	"testing"
 	"testing/fstest"
 
@@ -50,16 +51,39 @@ func TestNewPostsFromFilesystem(t *testing.T) {
 				t.Fatalf("got %d posts instead of the expected %d", actual, expected)
 			}
 		}
+		assertPostHasCorrectContent := func(t *testing.T, actual blogposts.Post, expected blogposts.Post) {
+			t.Helper()
+			if !reflect.DeepEqual(actual, expected) {
+				t.Errorf("got %+v, want %+v", actual, expected)
+			}
+		}
+		const first = "Title: Post 1\nDescription: Description 1\nTags: tdd, go\n---\nHello\nWorld"
+		const second = "Title: Post 2\nDescription: Description 2\nTags: rust, borrow-checker\n---\nB\nL\nM"
 		fs := fstest.MapFS{
-			"hello_world.md": {
-				Data: []byte("hi"),
+			"post1.md": {
+				Data: []byte(first),
 			},
-			"hello_world2.md": {
-				Data: []byte("hola"),
+			"post2.md": {
+				Data: []byte(second),
 			},
 		}
 		posts, err := blogposts.NewPostsFromFilesystem(fs)
+		expected := []blogposts.Post{
+			{
+				Title:       "Post 1",
+				Description: "Description 1",
+				Tags:        []string{"tdd", "go"},
+				Body:        "Hello\nWorld",
+			},
+			{
+				Title:       "Post 2",
+				Description: "Description 2",
+				Tags:        []string{"rust", "borrow-checker"},
+				Body:        "B\nL\nM",
+			},
+		}
 		assertNoErrors(t, err)
 		assertCorrectNumberOfPosts(t, posts, fs)
+		assertPostHasCorrectContent(t, posts[0], expected[0])
 	})
 }
