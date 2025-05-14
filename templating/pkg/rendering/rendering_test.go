@@ -16,7 +16,7 @@ func assertNoErrors(t *testing.T, err error) {
 	}
 }
 
-func BenchmarkRenderPost(b *testing.B) {
+func BenchmarkRenderPage(b *testing.B) {
 	post := blogposts.Post{
 		Title:       "This is the post title",
 		Description: "This is the post description",
@@ -26,11 +26,11 @@ func BenchmarkRenderPost(b *testing.B) {
 	renderer, _ := rendering.NewRenderer()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		renderer.RenderPost(io.Discard, post)
+		renderer.RenderPage(io.Discard, post)
 	}
 }
 
-func TestRenderPost(t *testing.T) {
+func TestRenderPage(t *testing.T) {
 	t.Run("rendering a Post struct", func(t *testing.T) {
 		post := blogposts.Post{
 			Title:       "This is the post title",
@@ -43,7 +43,7 @@ func TestRenderPost(t *testing.T) {
 			t.Fatal(err1)
 		}
 		buf := bytes.Buffer{}
-		err2 := renderer.RenderPost(&buf, post)
+		err2 := renderer.RenderPage(&buf, post)
 		assertNoErrors(t, err2)
 		approvals.VerifyString(t, buf.String())
 	})
