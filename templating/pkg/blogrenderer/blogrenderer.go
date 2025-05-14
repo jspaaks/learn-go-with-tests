@@ -9,11 +9,11 @@ import (
 
 var (
 	//go:embed "template.*.gohtml"
-	postTemplates embed.FS
+	templates embed.FS
 )
 
 func Render(writer io.Writer, post blogposts.Post) error {
-	templ, err := template.ParseFS(postTemplates, "template.*.gohtml")
+	templ, err := template.ParseFS(templates, "template.*.gohtml")
 	if err != nil {
 		return err
 	}
