@@ -1,0 +1,7 @@
+<h1>This is the post title</h1>
+<p>This is the post description</p>
+Tags:
+<ul>
+    <li>go</li>
+    <li>tdd</li>
+</ul>
