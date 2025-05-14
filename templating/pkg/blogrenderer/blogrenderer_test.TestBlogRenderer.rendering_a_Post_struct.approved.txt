@@ -18,9 +18,12 @@
     </div>
 </nav>
 <main>
+<h1>My blog</h1>
 
 
-<h2>This is the post title</h2>
+
+<h2>Posts</h2>
+<h3>This is the post title</h3>
 <p>This is the post description</p>
 Tags:
 <ul>
@@ -30,6 +33,7 @@ Tags:
     <li>tdd</li>
 
 </ul>
+
 
 
 </main>

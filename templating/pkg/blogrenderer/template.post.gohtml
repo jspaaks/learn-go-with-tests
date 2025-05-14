@@ -1,5 +1,7 @@
 {{define "post"}}
-<h2>{{.Title}}</h2>
+{{if len .Tags}}
+<h2>Posts</h2>
+<h3>{{.Title}}</h3>
 <p>{{.Description}}</p>
 Tags:
 <ul>
@@ -7,4 +9,7 @@ Tags:
     <li>{{.}}</li>
 {{end}}
 </ul>
+{{else}}
+<!-- no posts -->
+{{end}}
 {{end}}
