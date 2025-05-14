@@ -1,5 +1,5 @@
-{{template "top" .}}
-<h1>{{.Title}}</h1>
+{{define "post"}}
+<h2>{{.Title}}</h2>
 <p>{{.Description}}</p>
 Tags:
 <ul>
@@ -7,4 +7,4 @@ Tags:
     <li>{{.}}</li>
 {{end}}
 </ul>
-{{template "bottom" .}}
+{{end}}
