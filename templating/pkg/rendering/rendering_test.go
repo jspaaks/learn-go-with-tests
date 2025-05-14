@@ -38,10 +38,13 @@ func TestRenderPost(t *testing.T) {
 			Tags:        []string{"go", "tdd"},
 			Body:        "This is the post body",
 		}
-		renderer, _ := rendering.NewRenderer()
+		renderer, err1 := rendering.NewRenderer()
+		if err1 != nil {
+			t.Fatal(err1)
+		}
 		buf := bytes.Buffer{}
-		err := renderer.RenderPost(&buf, post)
-		assertNoErrors(t, err)
+		err2 := renderer.RenderPost(&buf, post)
+		assertNoErrors(t, err2)
 		approvals.VerifyString(t, buf.String())
 	})
 }
