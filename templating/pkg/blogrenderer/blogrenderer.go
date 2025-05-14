@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	//go:embed "templates/*"
+	//go:embed "template.*.gohtml"
 	postTemplates embed.FS
 )
 
 func Render(writer io.Writer, post blogposts.Post) error {
-	templ, err := template.ParseFS(postTemplates, "templates/*.gohtml")
+	templ, err := template.ParseFS(postTemplates, "template.*.gohtml")
 	if err != nil {
 		return err
 	}
