@@ -7,7 +7,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	"github.com/jspaaks/learn-go-with-tests/reading-files/pkg/blogposts"
+	"github.com/jspaaks/learn-go-with-tests/templating/pkg/blogposts"
 )
 
 type StubFailingFS struct {
