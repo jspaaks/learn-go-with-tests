@@ -15,6 +15,14 @@ type Post struct {
 	Body        string
 }
 
+func (p *Post) Route() string {
+	var tmp string = p.Title
+	tmp = strings.ReplaceAll(tmp, " ", "-")
+	tmp = strings.ToLower(tmp)
+	tmp = strings.Trim(tmp, "-")
+	return "/post/" + tmp
+}
+
 func newPost(postFile io.Reader) (Post, error) {
 	scanner := bufio.NewScanner(postFile)
 
@@ -34,9 +42,8 @@ func newPost(postFile io.Reader) (Post, error) {
 		return strings.Split(str, ", ")
 	}()
 
-	scanner.Scan() // skip line
-
 	body := func() string {
+		scanner.Scan() // skip line
 		buf := bytes.Buffer{}
 		for scanner.Scan() {
 			fmt.Fprintln(&buf, scanner.Text())
