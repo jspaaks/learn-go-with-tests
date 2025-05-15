@@ -1,3 +1,8 @@
 {{template "top" .}}
 <h2>List of posts</h2>
+<ol>
+{{range .}}
+    <li>{{.Title}}</li>
+{{end}}
+</ol>
 {{template "bottom" .}}

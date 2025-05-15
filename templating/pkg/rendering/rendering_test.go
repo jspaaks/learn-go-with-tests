@@ -16,7 +16,7 @@ func assertNoErrors(t *testing.T, err error) {
 	}
 }
 
-func BenchmarkRenderPage(b *testing.B) {
+func BenchmarkRenderPost(b *testing.B) {
 	post := blogposts.Post{
 		Title:       "This is the post title",
 		Description: "This is the post description",
@@ -30,7 +30,7 @@ func BenchmarkRenderPage(b *testing.B) {
 	}
 }
 
-func TestRenderPost(t *testing.T) {
+func TestRendering(t *testing.T) {
 	posts := []blogposts.Post{
 		{
 			Title:       "This is the first post title",

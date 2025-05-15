@@ -20,6 +20,13 @@
 <main>
 
 <h2>List of posts</h2>
+<ol>
+
+    <li>This is the first post title</li>
+
+    <li>This is the second post title</li>
+
+</ol>
 
 </main>
 <footer>
