@@ -1,4 +1,4 @@
-{{define "top"}}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,4 +18,16 @@
     </div>
 </nav>
 <main>
-{{end}}
+
+<h2>List of posts</h2>
+
+</main>
+<footer>
+    <ul>
+        <li><a href="https://twitter.com/quii">Twitter</a></li>
+        <li><a href="https://github.com/quii">GitHub</a></li>
+    </ul>
+</footer>
+</body>
+</html>
+

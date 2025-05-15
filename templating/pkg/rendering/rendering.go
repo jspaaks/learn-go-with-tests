@@ -19,12 +19,21 @@ type renderer struct {
 
 // Interface for renderers.
 type Renderer interface {
-	RenderPage(writer io.Writer, post blogposts.Post) error
+	RenderListOfPosts(writer io.Writer, posts []blogposts.Post) error
+	RenderPost(writer io.Writer, post blogposts.Post) error
 }
 
-// Renders the page as HTML using the embedded templates and the post data.
-func (r *renderer) RenderPage(writer io.Writer, post blogposts.Post) error {
-	if err := r.templ.ExecuteTemplate(writer, "template.index.gohtml", post); err != nil {
+// Renders the page as HTML using the embedded templates and the posts data.
+func (r *renderer) RenderListOfPosts(writer io.Writer, posts []blogposts.Post) error {
+	if err := r.templ.ExecuteTemplate(writer, "template.index.gohtml", posts); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Renders the page as HTML using the embedded templates and the data for a single data.
+func (r *renderer) RenderPost(writer io.Writer, post blogposts.Post) error {
+	if err := r.templ.ExecuteTemplate(writer, "template.post.gohtml", post); err != nil {
 		return err
 	}
 	return nil

@@ -1,8 +1,8 @@
-{{define "posts"}}
+{{template "top" .}}
 {{if len .Tags}}
-<h2>Posts</h2>
-<h3>{{.Title}}</h3>
+<h2>{{.Title}}</h2>
 <p>{{.Description}}</p>
+<p>{{.Body}}</p>
 Tags:
 <ul>
 {{range .Tags}}
@@ -12,4 +12,4 @@ Tags:
 {{else}}
 <!-- no posts -->
 {{end}}
-{{end}}
+{{template "bottom" .}}

@@ -26,25 +26,39 @@ func BenchmarkRenderPage(b *testing.B) {
 	renderer, _ := rendering.NewRenderer()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		renderer.RenderPage(io.Discard, post)
+		renderer.RenderPost(io.Discard, post)
 	}
 }
 
-func TestRenderPage(t *testing.T) {
-	t.Run("rendering a page", func(t *testing.T) {
-		post := blogposts.Post{
-			Title:       "This is the post title",
-			Description: "This is the post description",
+func TestRenderPost(t *testing.T) {
+	posts := []blogposts.Post{
+		{
+			Title:       "This is the first post title",
+			Description: "This is the first post description",
 			Tags:        []string{"go", "tdd"},
-			Body:        "This is the post body",
-		}
-		renderer, err1 := rendering.NewRenderer()
-		if err1 != nil {
-			t.Fatal(err1)
-		}
+			Body:        "This is the first post body",
+		},
+		{
+			Title:       "This is the second post title",
+			Description: "This is the second post description",
+			Tags:        []string{"rust", "borrow-checker"},
+			Body:        "This is the second post body",
+		},
+	}
+	renderer, err := rendering.NewRenderer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Run("rendering a single post page", func(t *testing.T) {
 		buf := bytes.Buffer{}
-		err2 := renderer.RenderPage(&buf, post)
-		assertNoErrors(t, err2)
+		err := renderer.RenderPost(&buf, posts[0])
+		assertNoErrors(t, err)
+		approvals.VerifyString(t, buf.String())
+	})
+	t.Run("rendering a list of posts page", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		err := renderer.RenderListOfPosts(&buf, posts)
+		assertNoErrors(t, err)
 		approvals.VerifyString(t, buf.String())
 	})
 }
