@@ -31,7 +31,7 @@ func BenchmarkRenderPage(b *testing.B) {
 }
 
 func TestRenderPage(t *testing.T) {
-	t.Run("rendering a Post struct", func(t *testing.T) {
+	t.Run("rendering a page", func(t *testing.T) {
 		post := blogposts.Post{
 			Title:       "This is the post title",
 			Description: "This is the post description",
