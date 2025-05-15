@@ -22,9 +22,9 @@
 <h2>List of posts</h2>
 <ol>
 
-    <li>This is the first post title</li>
+    <li><a href="/post/this-is-the-first-post-title">This is the first post title</a></li>
 
-    <li>This is the second post title</li>
+    <li><a href="/post/this-is-the-second-post-title">This is the second post title</a></li>
 
 </ol>
 
