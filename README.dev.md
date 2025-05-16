@@ -56,6 +56,12 @@ PASS
 ok      github.com/jspaaks/learn-go-with-tests/helloworld/pkg/helloworld        0.001s
 ```
 
+Running the tests recursively
+
+```console
+$ go test ./...
+```
+
 ## Running an executable
 
 ```console
