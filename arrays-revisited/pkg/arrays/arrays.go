@@ -33,3 +33,12 @@ func Reduce[A any, B any](slc []A, f func(item A, acc B) B, acc B) B {
 	}
 	return acc
 }
+
+func Find[T any](slc []T, predicate func(item T) bool) (found bool, value T) {
+	for _, item := range slc {
+		if predicate(item) {
+			return true, item
+		}
+	}
+	return
+}

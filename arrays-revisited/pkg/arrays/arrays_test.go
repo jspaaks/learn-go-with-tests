@@ -1,9 +1,10 @@
 package arrays_test
 
 import (
-	"testing"
-	"slices"
 	"github.com/jspaaks/learn-go-with-tests/arrays-revisited/pkg/arrays"
+	"github.com/jspaaks/learn-go-with-tests/arrays-revisited/pkg/assertions"
+	"slices"
+	"testing"
 )
 
 func TestSum(t *testing.T) {
@@ -15,14 +16,14 @@ func TestSum(t *testing.T) {
 		}
 	}
 
-	t.Run("empty slice", func (t *testing.T){
+	t.Run("empty slice", func(t *testing.T) {
 		var numbers = []int{}
 		var got int = arrays.Sum(numbers)
 		var want int = 0
 		assertEqual(t, got, want, numbers)
 	})
 
-	t.Run("slice of length 3", func (t *testing.T){
+	t.Run("slice of length 3", func(t *testing.T) {
 		var numbers = []int{1, 2, 3}
 		var got int = arrays.Sum(numbers)
 		var want int = 6
@@ -113,8 +114,8 @@ func TestSumAllTails(t *testing.T) {
 	})
 }
 
-func TestReduce(t *testing.T){
-	t.Run("summing an array of int", func(t *testing.T){
+func TestReduce(t *testing.T) {
+	t.Run("summing an array of int", func(t *testing.T) {
 		summer := func(item int, acc int) int {
 			return acc + item
 		}
@@ -125,7 +126,7 @@ func TestReduce(t *testing.T){
 			t.Errorf("Got %d instead of expected %d", reduced, expected)
 		}
 	})
-	t.Run("concatenating an array of string", func(t *testing.T){
+	t.Run("concatenating an array of string", func(t *testing.T) {
 		concatenator := func(item string, acc string) string {
 			return acc + item
 		}
@@ -136,7 +137,7 @@ func TestReduce(t *testing.T){
 			t.Errorf("Got %q instead of expected %q", reduced, expected)
 		}
 	})
-	t.Run("multiplying an array of int", func(t *testing.T){
+	t.Run("multiplying an array of int", func(t *testing.T) {
 		multiplier := func(item int, acc int) int {
 			return acc * item
 		}
@@ -147,7 +148,7 @@ func TestReduce(t *testing.T){
 			t.Errorf("Got %d instead of expected %d", reduced, expected)
 		}
 	})
-	t.Run("summing an array of int into a float64", func(t *testing.T){
+	t.Run("summing an array of int into a float64", func(t *testing.T) {
 		summer := func(item int, acc float64) float64 {
 			return acc + float64(item)
 		}
@@ -158,5 +159,41 @@ func TestReduce(t *testing.T){
 			t.Errorf("Got %g instead of expected %g", reduced, expected)
 		}
 	})
+}
 
+func TestFind(t *testing.T) {
+	t.Run("nonexistent even numbered item from []int", func(t *testing.T) {
+		input := []int{9, 5, 3, 7}
+		predicate := func(item int) bool {
+			return item%2 == 0
+		}
+		found, value := arrays.Find(input, predicate)
+		assertions.AssertFalse(t, found)
+		assertions.AssertEqual(t, value, 0)
+	})
+	t.Run("existing odd numbered item from []int", func(t *testing.T) {
+		input := []int{9, 5, 3, 7}
+		predicate := func(item int) bool {
+			return item%2 == 1
+		}
+		found, value := arrays.Find(input, predicate)
+		assertions.AssertTrue(t, found)
+		assertions.AssertEqual(t, value, 9)
+	})
+	t.Run("person over age 30 from slice of person", func(t *testing.T) {
+		type Person struct {
+			Name string
+			Age  int
+		}
+		valerie := Person{Name: "Valerie", Age: 25}
+		mike := Person{Name: "Mike", Age: 45}
+		chris := Person{Name: "Chris", Age: 33}
+		persons := []Person{valerie, mike, chris}
+		predicate := func(person Person) bool {
+			return person.Age > 30
+		}
+		found, person := arrays.Find(persons, predicate)
+		assertions.AssertTrue(t, found)
+		assertions.AssertEqual(t, person, mike)
+	})
 }
